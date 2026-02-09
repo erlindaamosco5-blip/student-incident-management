@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard | SWDSMS</title>
+
+  <style>
+    body {
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: linear-gradient(to bottom, #228B22, #006400);
+      margin: 0;
+      padding: 0;
+      color: #333;
+    }
+
+    a { text-decoration: none; }
+
+    /* ===== NAVBAR ===== */
+    header {
+      background-color: #006400;
+      border-bottom: 4px solid #FFD700;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    }
+
+    .nav-container {
+      max-width: 1200px;
+      margin: auto;
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 22px;
+      font-weight: bold;
+      color: #FFD700;
+    }
+
+    .logo img {
+      height: 50px;
+      width: 50px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #FFD700;
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 10px;
+      margin: 0;
+      padding: 0;
+    }
+
+    nav ul li a {
+      color: white;
+      padding: 10px 16px;
+      font-weight: 600;
+      border-radius: 6px;
+      transition: 0.3s;
+    }
+
+    nav ul li a:hover,
+    nav ul li a.active {
+      background-color: #228B22;
+      color: #FFD700;
+    }
+
+    .menu-toggle {
+      display: none;
+      font-size: 26px;
+      color: rgb(10, 10, 10);
+      cursor: pointer;
+    }
+
+    @media (max-width: 768px) {
+      nav ul {
+        position: absolute;
+        top: 65px;
+        right: 0;
+        width: 100%;
+        background-color: #006400;
+        flex-direction: column;
+        text-align: center;
+        display: none;
+      }
+
+      nav ul.show {
+        display: flex;
+      }
+
+      .menu-toggle {
+        display: block;
+      }
+    }
+
+    /* ===== CONTENT ===== */
+    .container {
+      width: 95%;
+      max-width: 1000px;
+      margin: 40px auto;
+      background: #fff;
+      padding: 30px 25px;
+      border-radius: 16px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      border-top: 10px solid #FFD700;
+    }
+
+    h1, h2 {
+      text-align: center;
+      color: #FFD700;
+      font-size: 32px;
+      margin-bottom: 10px;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #006400;
+      font-size: 16px;
+      margin-bottom: 30px;
+    }
+
+    table th, table td {
+      padding: 8px;
+      text-align: left;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      color: #FFD700;
+    }
+
+    .reset-btn {
+      background-color: #FF4500;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+
+    .reset-btn:hover {
+      background-color: #CC3700;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="nav-container">
+    <div class="logo">
+      <img src="logo.png" alt="School Logo">
+      SWDSMS 
+    </div>
+    <div class="menu-toggle" onclick="toggleMenu()">☰</div>
+    <nav>
+      <ul id="navMenu">
+        <li><a href="Home.html" class=>Bullying</a></li>
+        <li><a href="cyber.html" class=>Cyberbullying</a></li>
+        <li><a href="prevention.html" class=>Prevention</a></li>
+        <li><a href="min.html" class=>Report</a></li>
+        <li><a href="dashboard.html" class=>Dashboard</a></li>
+        <li><a href="get.html">Get Help Now</a></li>
+        <li><a href="login.html">Logout</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<div class="container">
+  <h2>All Submitted Reports</h2>
+  <p class="subtitle">Only Admin can view these reports.</p>
+
+  <div class="incident-list">
+    <table border="1" width="100%" style="border-collapse: collapse; margin-top: 10px;">
+      <thead>
+        <tr style="background-color: #228B22; color: #FFD700;">
+          <th>Student Name</th>
+          <th>Grade/Section</th>
+          <th>Incident Type</th>
+          <th>Description</th>
+          <th>Date</th>
+          <th>Time</th>
+        </tr>
+      </thead>
+      <tbody id="reportTable"></tbody>
+    </table>
+  </div>
+
+  <div class="info" style="margin-top: 25px;">
+    <strong>Total Incidents Submitted:</strong> <span id="totalIncidents">0</span>
+  </div>
+
+</div>
+
+<footer>© 2026 Bullying Awareness Campaign</footer>
+
+<script>
+  function toggleMenu() {
+    document.getElementById("navMenu").classList.toggle("show");
+  }
+
+  const reportTable = document.getElementById('reportTable');
+  const totalIncidents = document.getElementById('totalIncidents');
+
+  // Convert 24-hour time to 12-hour AM/PM
+  function formatTime(time24) {
+    if (!time24) return '';
+    const [hourStr, minute] = time24.split(':');
+    let hour = parseInt(hourStr);
+    const ampm = hour >= 12 ? 'PM' : 'AM';
+    hour = hour % 12;
+    hour = hour ? hour : 12;
+    return `${hour}:${minute} ${ampm}`;
+  }
+
+  // Load reports from localStorage
+  window.onload = function() {
+    const savedReports = JSON.parse(localStorage.getItem('reports')) || [];
+    savedReports.forEach(report => addReportToTable(report));
+  };
+
+  function addReportToTable(report) {
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td>${report.name}</td>
+      <td>${report.grade}</td>
+      <td>${report.type}</td>
+      <td>${report.desc}</td>
+      <td>${report.date}</td>
+      <td>${formatTime(report.time)}</td>
+    `;
+    reportTable.appendChild(row);
+    totalIncidents.textContent = reportTable.rows.length;
+  }
+
+</script>
+
+</body>
+</html>
