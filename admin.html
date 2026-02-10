@@ -1,0 +1,609 @@
+<<<<<<< HEAD
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Incident Management System</title>
+
+  <!-- CSS -->
+  <style>
+    body {
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: linear-gradient(to bottom, #228B22, #228B22);
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      width: 95%;
+      max-width: 1000px;
+      margin: 80px auto;
+      background: #fff;
+      padding: 30px 25px;
+      border-radius: 16px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      border-top: 10px solid #FFD700;
+      transition: all 0.3s ease;
+    }
+
+    h1 {
+      text-align: center;
+      color: #FFD700;
+      margin-bottom: 5px;
+      font-size: 28px;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #006400;
+      font-size: 16px;
+      margin-bottom: 25px;
+    }
+
+    form label {
+      display: block;
+      margin-top: 12px;
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 12px;
+      margin-top: 6px;
+      border: 1px solid #ebbe0b;
+      border-radius: 8px;
+      font-size: 14px;
+      box-sizing: border-box;
+      transition: all 0.2s ease;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: #c7b136;
+      box-shadow: 0 0 8px rgba(0,0,0,0.2);
+    }
+
+    button {
+      margin-top: 25px;
+      width: 100%;
+      padding: 14px;
+      background: #FFD700;
+      color: #000;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    button:hover {
+      background: #006400;
+      color: #fff;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      font-size: 14px;
+    }
+
+    th, td {
+      padding: 12px;
+      border: 1px solid #dcdde1;
+      text-align: left;
+    }
+
+    th {
+      background-color: #40739e;
+      color: white;
+    }
+
+    .dashboard {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      margin: 20px 0;
+    }
+
+    .card {
+      background-color: #00a8ff;
+      color: white;
+      padding: 20px;
+      border-radius: 12px;
+      text-align: center;
+      width: 48%;
+      margin-bottom: 15px;
+      transition: transform 0.2s ease;
+    }
+
+    .card:hover { transform: translateY(-5px); }
+
+    .card h3 { margin: 0; font-size: 20px; }
+    .card p { font-size: 28px; margin-top: 10px; }
+
+    /* Incident type colors */
+    .Bullying { background-color: #e74c3c; color: #fff; }
+    .Language { background-color: #f39c12; color: #fff; }
+    .Digital { background-color: #8e44ad; color: #fff; }
+
+    #loginMsg, #formMsg { color: red; text-align: center; font-weight: bold; margin-top: 10px; }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      color: #FFD700;
+      
+      margin-top: 10px;
+    }
+
+    @media(max-width: 600px) {
+      .card { width: 100%; }
+    }
+  </style>
+
+  <!-- Supabase -->
+  <script src="https://lqtpejkiinhxzdcnrujf"></script>
+</head>
+
+<body>
+
+  <!-- LOGIN PAGE -->
+  <div class="container" id="loginPage">
+    <h1>Student Incident Management System</h1>
+    <div class="subtitle">Admin / Teacher / Parent Login</div>
+    <form id="loginForm">
+      <label>Email</label>
+      <input type="email" id="email" required>
+      <label>Password</label>
+      <input type="password" id="password" required>
+      <button type="submit">Login</button>
+    </form>
+    <p id="loginMsg"></p>
+  </div>
+
+  <!-- INCIDENT FORM -->
+  <div class="container" id="reportPage" style="display:none;">
+    <h1>Report Incident</h1>
+    <div class="subtitle">Student / Parent Anonymous Reporting</div>
+    <form id="incidentForm">
+      <label>Student Name</label>
+      <input type="text" id="student_name" required>
+      <label>Grade/Section</label>
+      <input type="text" id="grade_section" required>
+      <label>Incident Type</label>
+      <select id="incident_type" required>
+        <option value="">Select Type</option>
+        <option>Bullying</option>
+        <option>Language</option>
+        <option>Digital Misuse</option>
+      </select>
+      <label>Description</label>
+      <textarea id="description" required></textarea>
+      <label>Date</label>
+      <input type="date" id="date" required>
+      <button type="submit">Submit</button>
+    </form>
+    <p id="formMsg"></p>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div class="container" id="dashboardPage" style="display:none;">
+    <h1>Dashboard</h1>
+    <div class="dashboard">
+      <div class="card">
+        <h3>Total Incidents</h3>
+        <p id="totalIncidents">0</p>
+      </div>
+      <div class="card">
+        <h3>By Type</h3>
+        <p id="typeStats">Bullying: 0<br>Language: 0<br>Digital Misuse: 0</p>
+      </div>
+    </div>
+
+    <h2>Incident List</h2>
+    <table id="incidentTable">
+      <thead>
+        <tr>
+          <th>Student Name</th>
+          <th>Grade/Section</th>
+          <th>Incident Type</th>
+          <th>Description</th>
+          <th>Date</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <footer>© 2026 Bullying Awareness Campaign</footer>
+
+  <!-- JavaScript -->
+  <script>
+    const supabaseUrl = 'YOUR_SUPABASE_URL';
+    const supabaseKey = 'YOUR_ANON_KEY';
+    const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+
+    const loginPage = document.getElementById('loginPage');
+    const reportPage = document.getElementById('reportPage');
+    const dashboardPage = document.getElementById('dashboardPage');
+
+    const loginForm = document.getElementById('loginForm');
+    const loginMsg = document.getElementById('loginMsg');
+    const incidentForm = document.getElementById('incidentForm');
+    const formMsg = document.getElementById('formMsg');
+
+    // LOGIN FUNCTION
+    loginForm.addEventListener('submit', async e => {
+      e.preventDefault();
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+      if(error) loginMsg.textContent = 'Login failed: ' + error.message;
+      else {
+        loginPage.style.display = 'none';
+        reportPage.style.display = 'block';
+        loginMsg.textContent = '';
+      }
+    });
+
+    // INCIDENT SUBMIT FUNCTION
+    incidentForm.addEventListener('submit', async e => {
+      e.preventDefault();
+      const student_name = document.getElementById('student_name').value;
+      const grade_section = document.getElementById('grade_section').value;
+      const incident_type = document.getElementById('incident_type').value;
+      const description = document.getElementById('description').value;
+      const date = document.getElementById('date').value;
+      const { data, error } = await supabase.from('incidents').insert([{ student_name, grade_section, incident_type, description, date }]);
+      if(error) formMsg.textContent = 'Error: ' + error.message;
+      else {
+        formMsg.style.color = 'green';
+        formMsg.textContent = 'Incident submitted successfully!';
+        incidentForm.reset();
+        showDashboard();
+      }
+    });
+
+    async function getIncidents() {
+      const { data, error } = await supabase.from('incidents').select('*');
+      if(error) { alert(error.message); return []; }
+      return data;
+    }
+
+    async function getDashboardStats() {
+      const incidents = await getIncidents();
+      const total = incidents.length;
+      const types = { Bullying: 0, Language: 0, "Digital Misuse": 0 };
+      incidents.forEach(i => { if(types[i.incident_type] !== undefined) types[i.incident_type]++; });
+      return { total, types, incidents };
+    }
+
+    async function showDashboard() {
+      reportPage.style.display = 'none';
+      dashboardPage.style.display = 'block';
+      const stats = await getDashboardStats();
+      document.getElementById('totalIncidents').textContent = stats.total;
+      document.getElementById('typeStats').innerHTML = 
+        `Bullying: ${stats.types.Bullying}<br>Language: ${stats.types.Language}<br>Digital Misuse: ${stats.types["Digital Misuse"]}`;
+      const tbody = document.querySelector('#incidentTable tbody');
+      tbody.innerHTML = '';
+      stats.incidents.forEach(i => {
+        const tr = document.createElement('tr');
+        const typeClass = i.incident_type.replace(" ", "");
+        tr.innerHTML = `<td>${i.student_name}</td><td>${i.grade_section}</td><td class="${typeClass}">${i.incident_type}</td><td>${i.description}</td><td>${i.date}</td>`;
+        tbody.appendChild(tr);
+      });
+    }
+  </script>
+
+</body>
+</html>
+=======
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Incident Management System</title>
+
+  <!-- CSS -->
+  <style>
+    body {
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: linear-gradient(to bottom, #228B22, #228B22);
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      width: 95%;
+      max-width: 1000px;
+      margin: 80px auto;
+      background: #fff;
+      padding: 30px 25px;
+      border-radius: 16px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      border-top: 10px solid #FFD700;
+      transition: all 0.3s ease;
+    }
+
+    h1 {
+      text-align: center;
+      color: #FFD700;
+      margin-bottom: 5px;
+      font-size: 28px;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #006400;
+      font-size: 16px;
+      margin-bottom: 25px;
+    }
+
+    form label {
+      display: block;
+      margin-top: 12px;
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 12px;
+      margin-top: 6px;
+      border: 1px solid #ebbe0b;
+      border-radius: 8px;
+      font-size: 14px;
+      box-sizing: border-box;
+      transition: all 0.2s ease;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: #c7b136;
+      box-shadow: 0 0 8px rgba(0,0,0,0.2);
+    }
+
+    button {
+      margin-top: 25px;
+      width: 100%;
+      padding: 14px;
+      background: #FFD700;
+      color: #000;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    button:hover {
+      background: #006400;
+      color: #fff;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      font-size: 14px;
+    }
+
+    th, td {
+      padding: 12px;
+      border: 1px solid #dcdde1;
+      text-align: left;
+    }
+
+    th {
+      background-color: #40739e;
+      color: white;
+    }
+
+    .dashboard {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      margin: 20px 0;
+    }
+
+    .card {
+      background-color: #00a8ff;
+      color: white;
+      padding: 20px;
+      border-radius: 12px;
+      text-align: center;
+      width: 48%;
+      margin-bottom: 15px;
+      transition: transform 0.2s ease;
+    }
+
+    .card:hover { transform: translateY(-5px); }
+
+    .card h3 { margin: 0; font-size: 20px; }
+    .card p { font-size: 28px; margin-top: 10px; }
+
+    /* Incident type colors */
+    .Bullying { background-color: #e74c3c; color: #fff; }
+    .Language { background-color: #f39c12; color: #fff; }
+    .Digital { background-color: #8e44ad; color: #fff; }
+
+    #loginMsg, #formMsg { color: red; text-align: center; font-weight: bold; margin-top: 10px; }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      color: #FFD700;
+      
+      margin-top: 10px;
+    }
+
+    @media(max-width: 600px) {
+      .card { width: 100%; }
+    }
+  </style>
+
+  <!-- Supabase -->
+  <script src="https://lqtpejkiinhxzdcnrujf"></script>
+</head>
+
+<body>
+
+  <!-- LOGIN PAGE -->
+  <div class="container" id="loginPage">
+    <h1>Student Incident Management System</h1>
+    <div class="subtitle">Admin / Teacher / Parent Login</div>
+    <form id="loginForm">
+      <label>Email</label>
+      <input type="email" id="email" required>
+      <label>Password</label>
+      <input type="password" id="password" required>
+      <button type="submit">Login</button>
+    </form>
+    <p id="loginMsg"></p>
+  </div>
+
+  <!-- INCIDENT FORM -->
+  <div class="container" id="reportPage" style="display:none;">
+    <h1>Report Incident</h1>
+    <div class="subtitle">Student / Parent Anonymous Reporting</div>
+    <form id="incidentForm">
+      <label>Student Name</label>
+      <input type="text" id="student_name" required>
+      <label>Grade/Section</label>
+      <input type="text" id="grade_section" required>
+      <label>Incident Type</label>
+      <select id="incident_type" required>
+        <option value="">Select Type</option>
+        <option>Bullying</option>
+        <option>Language</option>
+        <option>Digital Misuse</option>
+      </select>
+      <label>Description</label>
+      <textarea id="description" required></textarea>
+      <label>Date</label>
+      <input type="date" id="date" required>
+      <button type="submit">Submit</button>
+    </form>
+    <p id="formMsg"></p>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div class="container" id="dashboardPage" style="display:none;">
+    <h1>Dashboard</h1>
+    <div class="dashboard">
+      <div class="card">
+        <h3>Total Incidents</h3>
+        <p id="totalIncidents">0</p>
+      </div>
+      <div class="card">
+        <h3>By Type</h3>
+        <p id="typeStats">Bullying: 0<br>Language: 0<br>Digital Misuse: 0</p>
+      </div>
+    </div>
+
+    <h2>Incident List</h2>
+    <table id="incidentTable">
+      <thead>
+        <tr>
+          <th>Student Name</th>
+          <th>Grade/Section</th>
+          <th>Incident Type</th>
+          <th>Description</th>
+          <th>Date</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <footer>© 2026 Bullying Awareness Campaign</footer>
+
+  <!-- JavaScript -->
+  <script>
+    const supabaseUrl = 'YOUR_SUPABASE_URL';
+    const supabaseKey = 'YOUR_ANON_KEY';
+    const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+
+    const loginPage = document.getElementById('loginPage');
+    const reportPage = document.getElementById('reportPage');
+    const dashboardPage = document.getElementById('dashboardPage');
+
+    const loginForm = document.getElementById('loginForm');
+    const loginMsg = document.getElementById('loginMsg');
+    const incidentForm = document.getElementById('incidentForm');
+    const formMsg = document.getElementById('formMsg');
+
+    // LOGIN FUNCTION
+    loginForm.addEventListener('submit', async e => {
+      e.preventDefault();
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+      if(error) loginMsg.textContent = 'Login failed: ' + error.message;
+      else {
+        loginPage.style.display = 'none';
+        reportPage.style.display = 'block';
+        loginMsg.textContent = '';
+      }
+    });
+
+    // INCIDENT SUBMIT FUNCTION
+    incidentForm.addEventListener('submit', async e => {
+      e.preventDefault();
+      const student_name = document.getElementById('student_name').value;
+      const grade_section = document.getElementById('grade_section').value;
+      const incident_type = document.getElementById('incident_type').value;
+      const description = document.getElementById('description').value;
+      const date = document.getElementById('date').value;
+      const { data, error } = await supabase.from('incidents').insert([{ student_name, grade_section, incident_type, description, date }]);
+      if(error) formMsg.textContent = 'Error: ' + error.message;
+      else {
+        formMsg.style.color = 'green';
+        formMsg.textContent = 'Incident submitted successfully!';
+        incidentForm.reset();
+        showDashboard();
+      }
+    });
+
+    async function getIncidents() {
+      const { data, error } = await supabase.from('incidents').select('*');
+      if(error) { alert(error.message); return []; }
+      return data;
+    }
+
+    async function getDashboardStats() {
+      const incidents = await getIncidents();
+      const total = incidents.length;
+      const types = { Bullying: 0, Language: 0, "Digital Misuse": 0 };
+      incidents.forEach(i => { if(types[i.incident_type] !== undefined) types[i.incident_type]++; });
+      return { total, types, incidents };
+    }
+
+    async function showDashboard() {
+      reportPage.style.display = 'none';
+      dashboardPage.style.display = 'block';
+      const stats = await getDashboardStats();
+      document.getElementById('totalIncidents').textContent = stats.total;
+      document.getElementById('typeStats').innerHTML = 
+        `Bullying: ${stats.types.Bullying}<br>Language: ${stats.types.Language}<br>Digital Misuse: ${stats.types["Digital Misuse"]}`;
+      const tbody = document.querySelector('#incidentTable tbody');
+      tbody.innerHTML = '';
+      stats.incidents.forEach(i => {
+        const tr = document.createElement('tr');
+        const typeClass = i.incident_type.replace(" ", "");
+        tr.innerHTML = `<td>${i.student_name}</td><td>${i.grade_section}</td><td class="${typeClass}">${i.incident_type}</td><td>${i.description}</td><td>${i.date}</td>`;
+        tbody.appendChild(tr);
+      });
+    }
+  </script>
+
+</body>
+</html>
+>>>>>>> 0a1b0bfe474b078685ea04b1755274303ec8d49e
