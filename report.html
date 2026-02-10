@@ -1,169 +1,150 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard | SWDSMS</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard | SWDSMS</title>
 
-  <style>
-    body {
-      font-family: "Segoe UI", Arial, sans-serif;
-      background: linear-gradient(to bottom, #228B22, #006400);
-      margin: 0;
-      padding: 0;
-      color: #333;
-    }
+<style>
+body {
+  font-family: "Segoe UI", Arial, sans-serif;
+  background: linear-gradient(to bottom, #228B22, #006400);
+  padding: 0;
+  color: #333;
+}
+a { text-decoration: none; }
 
-    a { text-decoration: none; }
+header {
+  background-color: #006400;
+  border-bottom: 4px solid #FFD700;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
 
-    /* ===== NAVBAR ===== */
-    header {
-      background-color: #006400;
-      border-bottom: 4px solid #FFD700;
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-    }
+.nav-container {
+  max-width: 1200px;
+  margin: auto;
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
 
-    .nav-container {
-      max-width: 1200px;
-      margin: auto;
-      padding: 12px 20px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 22px;
+  font-weight: bold;
+  color: #FFD700;
+}
 
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 22px;
-      font-weight: bold;
-      color: #FFD700;
-    }
+.logo img {
+  height: 50px;
+  width: 50px;
+  border-radius: 50%;
+  border: 2px solid #FFD700;
+}
 
-    .logo img {
-      height: 50px;
-      width: 50px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 2px solid #FFD700;
-    }
+nav ul {
+  list-style: none;
+  display: flex;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+}
 
-    nav ul {
-      list-style: none;
-      display: flex;
-      gap: 10px;
-      margin: 0;
-      padding: 0;
-    }
+nav ul li a {
+  color: white;
+  padding: 10px 16px;
+  font-weight: 600;
+  border-radius: 6px;
+  transition: 0.3s;
+}
 
-    nav ul li a {
-      color: white;
-      padding: 10px 16px;
-      font-weight: 600;
-      border-radius: 6px;
-      transition: 0.3s;
-    }
+nav ul li a:hover {
+  background-color: #228B22;
+  color: #FFD700;
+}
 
-    nav ul li a:hover,
-    nav ul li a.active {
-      background-color: #228B22;
-      color: #FFD700;
-    }
+.container {
+  width: 95%;
+  max-width: 1000px;
+  margin: 40px auto;
+  background: #fff;
+  padding: 30px 25px;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+  border-top: 10px solid #FFD700;
+}
 
-    .menu-toggle {
-      display: none;
-      font-size: 26px;
-      color: rgb(10, 10, 10);
-      cursor: pointer;
-    }
+h2, h3 {
+  text-align: center;
+  color: #FFD700;
+}
 
-    @media (max-width: 768px) {
-      nav ul {
-        position: absolute;
-        top: 65px;
-        right: 0;
-        width: 100%;
-        background-color: #006400;
-        flex-direction: column;
-        text-align: center;
-        display: none;
-      }
+.subtitle {
+  text-align: center;
+  color: #006400;
+  margin-bottom: 30px;
+}
 
-      nav ul.show {
-        display: flex;
-      }
+form input,
+form select,
+form textarea,
+form button {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+  border: 1px solid #ebbe0b;
+  font-size: 14px;
+  box-sizing: border-box;
+  transition: all 0.2s ease;
+}
 
-      .menu-toggle {
-        display: block;
-      }
-    }
+form input:focus,
+form select:focus,
+form textarea:focus {
+  outline: none;
+  border-color: #c7b136;
+  box-shadow: 0 0 8px rgba(0,0,0,0.2);
+}
 
-    /* ===== CONTENT ===== */
-    .container {
-      width: 95%;
-      max-width: 1000px;
-      margin: 40px auto;
-      background: #fff;
-      padding: 30px 25px;
-      border-radius: 16px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-      border-top: 10px solid #FFD700;
-    }
+form button {
+  background-color: #FFD700;
+  color: #000;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
 
-    h1, h2 {
-      text-align: center;
-      color: #FFD700;
-      font-size: 32px;
-      margin-bottom: 10px;
-    }
+form button:hover {
+  background-color: #006400;
+  color: #fff;
+}
 
-    .subtitle {
-      text-align: center;
-      color: #006400;
-      font-size: 16px;
-      margin-bottom: 30px;
-    }
+table th, table td {
+  padding: 8px;
+  text-align: left;
+}
 
-    form input, form select, form textarea, form button {
-      width: 100%;
-      padding: 8px;
-      margin: 5px 0 15px 0;
-      border-radius: 6px;
-      border: 1px solid black;
-      font-size: 14px;
-    }
+footer {
+  text-align: center;
+  padding: 20px;
+  color: #FFD700;
+}
 
-    form button {
-      background-color: #FFD700;
-      color: black;
-      border: none;
-      cursor: pointer;
-      font-weight: bold;
-      transition: 0.3s;
-    }
-
-    form button:hover {
-      background-color: #228B22;
-      color: #FFD700;
-    }
-
-    table th, table td {
-      padding: 8px;
-      text-align: left;
-    }
-
-    footer {
-      text-align: center;
-      padding: 20px;
-      color: #FFD700;
-    
-    }
-
-  </style>
+h3#reportsToggle {
+  cursor: pointer;
+  user-select: none;
+}
+</style>
 </head>
 <body>
 
@@ -173,12 +154,11 @@
       <img src="logo.png" alt="School Logo">
       SWDSMS
     </div>
-    <div class="menu-toggle" onclick="toggleMenu()">☰</div>
     <nav>
       <ul id="navMenu">
         <li><a href="Home.html">Bullying</a></li>
         <li><a href="cyber.html">Cyberbullying</a></li>
-        <li><a href="prevention.html">Prevention</a></li>
+        <li><a href="prevention.html" class="active">Prevention</a></li>
         <li><a href="report.html">Report</a></li>
         <li><a href="dashboard.html">Dashboard</a></li>
         <li><a href="get.html">Get Help Now</a></li>
@@ -188,47 +168,44 @@
   </div>
 </header>
 
-<div class="container">
+<!-- INCIDENT REPORT FORM -->
+<div class="container" id="formContainer">
   <h2>Anonymous Incident Reporting</h2>
   <p class="subtitle">Submit a report safely and anonymously.</p>
 
   <form id="incidentForm">
-    <label for="studentName">Student Name:</label>
-    <input type="text" id="studentName" name="studentName" placeholder="Optional">
-
-    <label for="grade">Grade/Section:</label>
-    <input type="text" id="grade" name="grade" placeholder="e.g., 10-A">
-
-    <label for="incidentType">Incident Type:</label>
-    <select id="incidentType" name="incidentType">
-      <option value="Bullying">Bullying</option>
-      <option value="Language">Language</option>
-      <option value="Digital Misuse">Digital Misuse</option>
-      <option value="Using Cellphone During Exam">Using Cellphone During Exam</option>
-      <option value="Cutting Class">Cutting Class</option>
-      <option value="Substance Abuse">Substance Abuse</option>
+    <input type="text" id="studentName" placeholder="Student Name (Optional)">
+    <input type="text" id="grade" placeholder="Grade / Section">
+    <select id="incidentType">
+      <option>Bullying</option>
+      <option>Language</option>
+      <option>Digital Misuse</option>
+      <option>Cutting Class</option>
+      <option>Substance Abuse</option>
     </select>
-
-    <label for="description">Description:</label>
-    <textarea id="description" name="description" rows="4" placeholder="Describe the incident"></textarea>
-
-    <label for="date">Date of Incident:</label>
-    <input type="date" id="date" name="date">
-
-    <label for="time">Time of Incident:</label>
-    <input type="time" id="time" name="time">
-
+    <textarea id="description" rows="4" placeholder="Describe the incident"></textarea>
+    <input type="date" id="date">
+    <input type="time" id="time">
     <button type="submit">Submit Report</button>
   </form>
 
-  <div class="incident-list">
-    <h3>Submitted Reports</h3>
-    <table border="1" width="100%" style="border-collapse: collapse; margin-top: 10px;">
+  <div id="successMessage" style="display:none; text-align:center; color:green; font-weight:bold;">
+    Report successfully submitted!
+  </div>
+</div>
+
+<!-- REPORTS TOGGLE -->
+<div class="container" id="adminReports" style="display:none;">
+  <h3 id="reportsToggle" onclick="toggleReports()">📋 View Submitted Reports</h3>
+  <div id="reportsContent" style="display:none; margin-top:10px;">
+    <input type="text" id="searchInput" placeholder="Search by student name..." 
+      style="width:100%; padding:8px; margin-bottom:10px; border-radius:6px; border:1px solid black;">
+    <table border="1" width="100%" style="border-collapse: collapse;">
       <thead>
-        <tr style="background-color: #228B22; color: #FFD700;">
+        <tr style="background:#228B22;color:#FFD700;">
           <th>Student Name</th>
-          <th>Grade/Section</th>
-          <th>Incident Type</th>
+          <th>Grade</th>
+          <th>Type</th>
           <th>Description</th>
           <th>Date</th>
           <th>Time</th>
@@ -236,82 +213,153 @@
       </thead>
       <tbody id="reportTable"></tbody>
     </table>
+    <div style="margin-top:15px;">
+      <strong>Total Incidents Submitted:</strong>
+      <span id="totalIncidents">0</span>
+    </div>
   </div>
-
-  <div class="info" style="margin-top: 25px;">
-    <strong>Total Incidents Submitted:</strong> <span id="totalIncidents">0</span>
-  </div>
- </div>
+</div>
 
 <footer>© 2026 Bullying Awareness Campaign</footer>
 
 <script>
-  function toggleMenu() {
-    document.getElementById("navMenu").classList.toggle("show");
+const form = document.getElementById("incidentForm");
+const reportTable = document.getElementById("reportTable");
+const totalIncidents = document.getElementById("totalIncidents");
+const adminReports = document.getElementById("adminReports");
+const formContainer = document.getElementById("formContainer");
+const successMessage = document.getElementById("successMessage");
+
+// Logged user info
+const loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
+const isAdmin = loggedUser && loggedUser.email === "erlindaamosco810@gmail.com" && loggedUser.password === "1245678";
+const isVerified = loggedUser && loggedUser.verified;
+
+// Format time
+function formatTime(time){
+  let [h, m] = time.split(":");
+  h = parseInt(h);
+  const ampm = h >= 12 ? "PM" : "AM";
+  h = h % 12 || 12;
+  return `${h}:${m} ${ampm}`;
+}
+
+// Show Reports for Admin/Verified
+if(isAdmin || isVerified){
+  adminReports.style.display = "block"; // show container
+  formContainer.style.display = "block"; // they can submit
+  const reports = JSON.parse(localStorage.getItem("reports")) || [];
+  reports.forEach(addRow);
+}
+
+// Pending User Verification only visible for admin
+if(isAdmin){
+  const users = JSON.parse(localStorage.getItem("users")) || [];
+  const verifyContainer = document.createElement("div");
+  verifyContainer.className = "container";
+  verifyContainer.innerHTML = `
+    <h3>Pending Users Verification</h3>
+    <table border="1" width="100%" style="border-collapse: collapse;">
+      <thead>
+        <tr style="background:#228B22;color:#FFD700;">
+          <th>Full Name</th>
+          <th>Email</th>
+          <th>Role</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="verifyTable"></tbody>
+    </table>
+  `;
+  document.body.insertBefore(verifyContainer, document.querySelector("footer"));
+  const verifyTable = document.getElementById("verifyTable");
+
+  function loadPendingUsers(){
+    verifyTable.innerHTML = "";
+    users.forEach((user,index)=>{
+      if((user.role==="Teacher" || user.role==="Parent") && !user.verified){
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${user.fullName}</td>
+          <td>${user.email}</td>
+          <td>${user.role}</td>
+          <td><button onclick="verifyUser(${index})">Verify</button></td>
+        `;
+        verifyTable.appendChild(row);
+      }
+    });
   }
 
-  const form = document.getElementById('incidentForm');
-  const reportTable = document.getElementById('reportTable');
-  const totalIncidents = document.getElementById('totalIncidents');
-
-  // Convert 24-hour time to 12-hour format
-  function formatTime(time24) {
-    if (!time24) return '';
-    const [hourStr, minute] = time24.split(':');
-    let hour = parseInt(hourStr);
-    const ampm = hour >= 12 ? 'PM' : 'AM';
-    hour = hour % 12;
-    hour = hour ? hour : 12; // 0 becomes 12
-    return `${hour}:${minute} ${ampm}`;
+  window.verifyUser = function(index){
+    users[index].verified = true;
+    localStorage.setItem("users", JSON.stringify(users));
+    loadPendingUsers();
+    alert(users[index].fullName + " has been verified!");
   }
 
-  window.onload = function() {
-    const savedReports = JSON.parse(localStorage.getItem('reports')) || [];
-    savedReports.forEach(report => addReportToTable(report));
+  loadPendingUsers();
+}
+
+// Submit Incident Report
+form.addEventListener("submit", e=>{
+  e.preventDefault();
+  const report = {
+    name: studentName.value || "Anonymous",
+    grade: grade.value || "-",
+    type: incidentType.value,
+    desc: description.value,
+    date: date.value,
+    time: time.value
   };
+  const reports = JSON.parse(localStorage.getItem("reports")) || [];
+  reports.push(report);
+  localStorage.setItem("reports", JSON.stringify(reports));
+  if(isAdmin || isVerified) addRow(report);
+  successMessage.style.display = "block";
+  setTimeout(()=> successMessage.style.display="none",3000);
+  form.reset();
+});
 
-  form.addEventListener('submit', function(e) {
-    e.preventDefault();
+// Add row to table
+function addRow(r){
+  const row = document.createElement("tr");
+  row.innerHTML=`
+    <td>${r.name}</td>
+    <td>${r.grade}</td>
+    <td>${r.type}</td>
+    <td>${r.desc}</td>
+    <td>${r.date}</td>
+    <td>${formatTime(r.time)}</td>
+  `;
+  reportTable.appendChild(row);
+  totalIncidents.textContent = reportTable.rows.length;
+}
 
-    const name = document.getElementById('studentName').value || 'Anonymous';
-    const grade = document.getElementById('grade').value || '-';
-    const type = document.getElementById('incidentType').value;
-    const desc = document.getElementById('description').value.trim();
-    const date = document.getElementById('date').value;
-    const time = document.getElementById('time').value;
-
-    if (!desc || !date || !time) {
-      alert('Please fill in the description, date, and time.');
-      return;
-    }
-
-    const report = { name, grade, type, desc, date, time };
-
-    addReportToTable(report);
-
-    const savedReports = JSON.parse(localStorage.getItem('reports')) || [];
-    savedReports.push(report);
-    localStorage.setItem('reports', JSON.stringify(savedReports));
-
-    form.reset();
-  });
-
-  function addReportToTable(report) {
-    const row = document.createElement('tr');
-    row.innerHTML = `
-      <td>${report.name}</td>
-      <td>${report.grade}</td>
-      <td>${report.type}</td>
-      <td>${report.desc}</td>
-      <td>${report.date}</td>
-      <td>${formatTime(report.time)}</td>
-    `;
-    reportTable.appendChild(row);
-
-    totalIncidents.textContent = reportTable.rows.length;
-  
+// Toggle Reports View
+function toggleReports(){
+  const content = document.getElementById("reportsContent");
+  const toggle = document.getElementById("reportsToggle");
+  if(content.style.display === "none"){
+    content.style.display = "block";
+    toggle.textContent = "📋 Hide Submitted Reports";
+  } else {
+    content.style.display = "none";
+    toggle.textContent = "📋 View Submitted Reports";
   }
-</script>
+}
 
+// Search inside Reports
+const searchInput = document.getElementById("searchInput");
+if(searchInput){
+  searchInput.addEventListener("keyup",()=>{
+    const filter = searchInput.value.toLowerCase();
+    const rows = reportTable.getElementsByTagName("tr");
+    for(let row of rows){
+      const nameCell = row.cells[0].textContent.toLowerCase();
+      row.style.display = nameCell.includes(filter) ? "" : "none";
+    }
+  });
+}
+</script>
 </body>
 </html>

@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Student Incident Management System - Login</title>
 
-  <!-- CSS -->
   <style>
     body {  
       font-family: "Segoe UI", Arial, sans-serif;
@@ -35,26 +34,10 @@
       border: 2px solid #FFD700;
     }
 
-    h1 {
-      color: #FFD700;
-      margin-bottom: 10px;
-      font-size: 28px;
-    }
+    h1 { color: #FFD700; margin-bottom: 10px; font-size: 28px; }
+    .subtitle { color: #006400; font-size: 16px; margin-bottom: 25px; }
 
-    .subtitle {
-      color: #006400;
-      font-size: 16px;
-      margin-bottom: 25px;
-    }
-
-    form label {
-      display: block;
-      margin-top: 12px;
-      font-weight: 600;
-      font-size: 14px;
-      text-align: left;
-    }
-
+    form label { display: block; margin-top: 12px; font-weight: 600; font-size: 14px; text-align: left; }
     input {
       width: 100%;
       padding: 12px;
@@ -65,12 +48,7 @@
       box-sizing: border-box;
       transition: all 0.2s ease;
     }
-
-    input:focus {
-      outline: none;
-      border-color: #c7b136;
-      box-shadow: 0 0 8px rgba(0,0,0,0.2);
-    }
+    input:focus { outline: none; border-color: #c7b136; box-shadow: 0 0 8px rgba(0,0,0,0.2); }
 
     button {
       margin-top: 25px;
@@ -85,35 +63,25 @@
       cursor: pointer;
       transition: all 0.3s ease;
     }
+    button:hover { background: #006400; color: #fff; }
 
-    button:hover {
-      background: #006400;
-      color: #fff;
-    }
+    .toggle-link { text-align: center; margin-top: 15px; }
+    .toggle-link a { color: #006400; font-weight: bold; text-decoration: none; }
+    .toggle-link a:hover { text-decoration: underline; }
 
-    .toggle-link {
-      text-align: center;
-      margin-top: 15px;
-    }
-
-    .toggle-link a {
-      color: #006400;
+    /* Error message */
+    #error {
+      color: red;
+      margin-top: 12px;
       font-weight: bold;
-      text-decoration: none;
-    }
-
-    .toggle-link a:hover {
-      text-decoration: underline;
+      text-align: middle;
     }
   </style>
 </head>
 <body>
 
-  <!-- LOGIN PAGE -->
   <div class="container">
-    <!-- Logo -->
     <img src="logo.png" alt="School Logo" class="logo">
-
     <h1>Incident Reporting Portal</h1>
     <div class="subtitle">Login to access the system</div>
 
@@ -123,20 +91,61 @@
       <label>Password</label>
       <input type="password" id="password" placeholder="Enter your password" required>
       <button type="submit">Login</button>
+      <div id="error"></div>
     </form>
 
     <div class="toggle-link">
       <a href="signupform.html">Don't have an account? Sign Up</a>
     </div>
   </div>
+<script>
+  // Default users (auto save if not exists)
+  if (!localStorage.getItem("users")) {
+    const defaultUsers = [
+      {
+        fullName: "Erlinda Amosco",
+        email: "erlindaamosco810@gmail.com",
+        password: "1245678",
+        role: "Admin"  // <-- admin role
+      }
+    ];
+    localStorage.setItem("users", JSON.stringify(defaultUsers));
+  }
 
-  <script>
-    const loginForm = document.getElementById('loginForm');
-    loginForm.addEventListener('submit', e => {
-      e.preventDefault(); // prevent page refresh
-      window.location.href = 'Home.html'; // redirect to home page
-    });
-  </script>
+  const loginForm = document.getElementById("loginForm");
+  const errorDiv = document.createElement("div");
+  errorDiv.style.color = "red";
+  errorDiv.style.marginTop = "10px";
+  loginForm.appendChild(errorDiv);
+
+  loginForm.addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value.trim();
+
+    const users = JSON.parse(localStorage.getItem("users")) || [];
+
+    const user = users.find(u => u.email === email);
+
+    if (!user) {
+      errorDiv.textContent = "Email not found. Please sign up first.";
+    } else if (user.password !== password) {
+      errorDiv.textContent = "Incorrect password. Try again.";
+    } else {
+      // Save logged in user
+      localStorage.setItem("loggedUser", JSON.stringify(user));
+      errorDiv.textContent = "";
+
+      // Redirect based on role
+      if (user.role === "Admin") {
+        window.location.href = "min.html";  // Admin dashboard
+      } else {
+        window.location.href = "Home.html"; // Teacher/Student/Parent
+      }
+    }
+  });
+</script>
 
 </body>
 </html>

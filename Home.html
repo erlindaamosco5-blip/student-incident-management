@@ -50,7 +50,6 @@
       border: 2px solid #FFD700;
     }
 
-
     nav ul {
       list-style: none;
       display: flex;
@@ -187,6 +186,23 @@
       color: #FFD700;
       margin-top: 10px;
     }
+
+    /* ===== Admin Report Table ===== */
+    #adminReports table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+    #adminReports table th,
+    #adminReports table td {
+      padding: 8px;
+      border: 1px solid #000;
+      text-align: left;
+    }
+    #adminReports table th {
+      background-color: #228B22;
+      color: #FFD700;
+    }
   </style>
 </head>
 <body>
@@ -195,25 +211,25 @@
   <header>
     <div class="nav-container">
       <div class="logo">
-        <img src="logo.png" alt="Bullying Awareness Logo">  SWDSMS
+        <img src="logo.png" alt="Bullying Awareness Logo"> SWDSMS
       </div>
       <div class="menu-toggle" onclick="toggleMenu()">☰</div>
 
       <nav>
         <ul id="navMenu">
-          <li><a href="Home.html">Bullying</a></li>
+          <li><a href="Home.html" class="active">Bullying</a></li>
           <li><a href="cyber.html">Cyberbullying</a></li>
           <li><a href="prevention.html">Prevention</a></li>
           <li><a href="report.html">Report</a></li>
           <li><a href="dashboard.html">Dashboard</a></li>
-          <li><a href="get.html" class=>Get Help Now</a></li>
-          <li><a href="login.html" class=>Logout</a></li>
+          <li><a href="get.html">Get Help Now</a></li>
+          <li><a href="#" onclick="logout()">Logout</a></li>
         </ul>
       </nav>
     </div>
   </header>
 
-  <!-- CONTENT -->
+  <!-- MAIN CONTENT -->
   <div class="container">
     <h1>Learn, Report, and Take Action Against Bullying</h1>
     <div class="subtitle">Your guide to creating a safe and supportive environment for students</div>
@@ -269,13 +285,98 @@
     </section>
   </div>
 
-  <footer>
-    © 2026 Bullying Awareness Campaign
-  </footer>
+  <!-- ADMIN REPORTS (Only visible to admin) -->
+  <div class="container" id="adminReports" style="display: none;">
+    <h2>Submitted Reports (Admin Only)</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Student Name</th>
+          <th>Grade/Section</th>
+          <th>Incident Type</th>
+          <th>Description</th>
+          <th>Date</th>
+          <th>Time</th>
+        </tr>
+      </thead>
+      <tbody id="reportTable"></tbody>
+    </table>
+    <div style="margin-top: 20px;">
+      <strong>Total Incidents Submitted:</strong> <span id="totalIncidents">0</span>
+    </div>
+  </div>
+
+  <footer>© 2026 Bullying Awareness Campaign</footer>
 
   <script>
     function toggleMenu() {
       document.getElementById("navMenu").classList.toggle("show");
+    }
+
+    function logout() {
+      localStorage.removeItem("loggedUser");
+      window.location.href = "login.html";
+    }
+
+    // ADMIN REPORTS LOGIC
+    const loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
+
+    if (loggedUser && loggedUser.role === "Admin") {
+      document.getElementById("adminReports").style.display = "block";
+
+      const reportTable = document.getElementById('reportTable');
+      const totalIncidents = document.getElementById('totalIncidents');
+
+      function formatTime(time24) {
+        if (!time24) return '';
+        const [hourStr, minute] = time24.split(':');
+        let hour = parseInt(hourStr);
+        const ampm = hour >= 12 ? 'PM' : 'AM';
+        hour = hour % 12;
+        hour = hour ? hour : 12;
+        return `${hour}:${minute} ${ampm}`;
+      }
+
+      function addReportToTable(report) {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${report.name}</td>
+          <td>${report.grade}</td>
+          <td>${report.type}</td>
+          <td>${report.desc}</td>
+          <td>${report.date}</td>
+          <td>${formatTime(report.time)}</td>
+        `;
+        reportTable.appendChild(row);
+        totalIncidents.textContent = reportTable.rows.length;
+      }
+
+      const savedReports = JSON.parse(localStorage.getItem('reports')) || [];
+
+      if (savedReports.length === 0) {
+        const defaultReports = [
+          {
+            name: "Anonymous",
+            grade: "10-A",
+            type: "Bullying",
+            desc: "Sinampal ako at sinuntok",
+            date: "2026-03-01",
+            time: "16:07"
+          },
+          {
+            name: "Vham",
+            grade: "12-B",
+            type: "Cutting Class",
+            desc: "Ayaw pumasok kasi mas gusto mag-inom ng alak",
+            date: "2026-03-05",
+            time: "13:16"
+          }
+        ];
+        localStorage.setItem('reports', JSON.stringify(defaultReports));
+        defaultReports.forEach(report => addReportToTable(report));
+      } else {
+        savedReports.forEach(report => addReportToTable(report));
+      }
     }
   </script>
 
