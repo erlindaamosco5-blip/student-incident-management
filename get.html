@@ -1,0 +1,291 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Help & Resources | SWDSMS</title>
+
+  
+  <style>
+    body {
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: linear-gradient(to bottom, #228B22, #006400);
+      margin: 0;
+      padding: 0;
+      color: #333;
+    }
+
+    a { text-decoration: none; }
+
+    /* ===== NAVBAR ===== */
+    header {
+      background-color: #006400;
+      border-bottom: 4px solid #FFD700;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+   }
+
+    .nav-container {
+      max-width: 1200px;
+      margin: auto;
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 22px;
+      font-weight: bold;
+      color: #FFD700;
+    }
+
+    .logo img {
+      height: 50px;
+      width: 50px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #FFD700;
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 10px;
+      margin: 0;
+      padding: 0;
+    }
+
+    nav ul li a {
+      color: white;
+      padding: 10px 16px;
+      font-weight: 600;
+      border-radius: 6px;
+      transition: 0.3s;
+    }
+
+    nav ul li a:hover,
+    nav ul li a.active {
+      background-color: #228B22;
+      color: #FFD700;
+   }
+
+    .menu-toggle {
+      display: none;
+      font-size: 26px;
+      color: white;
+      cursor: pointer;
+     }
+
+    @media (max-width: 768px) {
+      nav ul {
+        position: absolute;
+        top: 65px;
+        right: 0;
+        width: 100%;
+        background-color: #006400;
+        flex-direction: column;
+        text-align: center;
+        display: none;
+      }
+
+      nav ul.show {
+        display: flex;
+      }
+
+      .menu-toggle {
+        display: block;
+      }
+    }
+
+     /* ===== CONTENT ===== */
+    .container {
+      width: 95%;
+      max-width: 1000px;
+      margin: 40px auto;
+      background: #fff;
+      padding: 30px 25px;
+      border-radius: 16px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      border-top: 10px solid #FFD700;
+    
+    }
+
+    h1 {
+      text-align: center;
+      color: #FFD700;
+      font-size: 32px;
+      margin-bottom: 20px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      font-size: 14px;
+    }
+
+    th, td {
+      border: 1px solid #ebbe0b;
+      padding: 12px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      background-color: #ffd70033;
+      color: #006400;
+      font-weight: bold;
+    }
+
+    a.table-link {
+      color: #006400;
+    }
+
+    a.table-link:hover {
+      text-decoration: underline;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      color: #FFD700;
+      margin-top: 10px;
+    }
+
+    @media (max-width: 700px) {
+      .container { padding: 25px 20px; }
+      table, th, td { font-size: 13px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <header>
+    <div class="nav-container">
+      <div class="logo">
+        <img src="logo.png" alt="School Logo">
+        SWDSMS
+      </div>
+      <div class="menu-toggle" onclick="toggleMenu()">☰</div>
+
+      <nav>
+        <ul id="navMenu">
+          <li><a href="Home.html">Bullying</a></li>
+          <li><a href="cyber.html">Cyberbullying</a></li>
+          <li><a href="prevention.html">Prevention</a></li>
+          <li><a href="report.html">Report</a></li>
+          <li><a href="dashboard.html">Dashboard</a></li>
+          <li><a href="get.html" class=>Get Help Now</a></li>
+          <li><a href="login.html">Logout</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- MAIN CONTENT -->
+  <div class="container">
+ <h1>Help & Resources</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>The Problem</th>
+      <th>What You Can Do</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>There has been a crime or someone is at immediate risk of harm.</td>
+      <td>
+        <strong>Emergency Hotline:</strong> Call 911 immediately.<br>
+        <em>Use this number if someone is in danger, there is a crime happening, or medical help is needed urgently. Do not wait—every second counts.</em><br>
+        <strong>Additional steps:</strong><br>
+        1. Make sure you are safe before helping.<br>
+        2. Provide clear details to the dispatcher (location, type of incident, number of people involved, and condition of anyone hurt).<br>
+        3. If possible, stay on the line until help arrives.<br>
+        <strong>Tip:</strong> Keep local police and barangay emergency contacts handy for faster response in your area.
+      </td>
+    </tr>
+    <tr>
+      <td>Someone is feeling hopeless, helpless, or thinking of suicide.</td>
+      <td>
+        <strong>Call or text:</strong> 2919 (National Center for Mental Health Crisis Hotline)<br>
+        <strong>Online chat support:</strong> <a class="table-link" href="https://www.ncmh.gov.ph/" target="_blank">NCMH Online Support</a><br>
+        <em>This service is free and confidential, available 24/7. Trained counselors listen, provide emotional support, and guide the person to professional help.</em><br>
+        <strong>Signs to watch for:</strong> Talking about death, withdrawing from friends or family, sudden mood changes, or loss of interest in activities.<br>
+        <strong>How to help:</strong><br>
+        1. Stay calm and listen carefully without judging.<br>
+        2. Let them know they are not alone and that help is available.<br>
+        3. Encourage professional help and, if necessary, stay with them until support arrives.<br>
+        <strong>Reminder:</strong> Never ignore threats of self-harm. Acting early can save a life.
+      </td>
+    </tr>
+    <tr>
+      <td>Someone is acting differently than normal, struggling to complete tasks, or unable to care for themselves.</td>
+      <td>
+        <strong>What to do:</strong><br>
+        1. Observe and take note of changes in behavior, mood, or routine. These could include withdrawal from friends/family, loss of interest in hobbies, confusion, or neglect of personal hygiene.<br>
+        2. Encourage them to talk openly about how they feel without pressuring them.<br>
+        3. Reach out to local mental health professionals, psychologists, or counselors.<br>
+        4. Contact the <strong>Department of Health (DOH)</strong> for mental health programs and community support.<br>
+        <em>Early support can prevent bigger mental health issues. Small actions like listening, checking in regularly, and encouraging professional help make a big difference.</em>
+      </td>
+    </tr>
+    <tr>
+      <td>A child is being bullied in school.</td>
+      <td>
+        <strong>Steps to take:</strong><br>
+        1. Talk to the child calmly and listen to their experience. Let them know they are not alone.<br>
+        2. Contact the teacher and explain the situation, including specific incidents and times.<br>
+        3. Inform the school guidance counselor and principal. Provide any evidence if possible.<br>
+        4. If unresolved, contact the Department of Education (DepEd) hotline: 1-800-1-DepEd (1-800-133733) or visit <a class="table-link" href="https://www.deped.gov.ph/resources/" target="_blank">DepEd Resources</a>.<br>
+        <em>Bullying affects mental health, confidence, and school performance. Early reporting helps protect the child and encourages a safer school environment.</em><br>
+        <strong>Tip:</strong> Encourage the child to stay away from the bully when possible, build supportive friendships, and keep a record of bullying incidents.
+      </td>
+    </tr>
+    <tr>
+      <td>A child is being cyberbullied.</td>
+      <td>
+        <strong>Steps to take:</strong><br>
+        1. Keep evidence of the bullying (screenshots, messages, emails, posts).<br>
+        2. Report the incident to the platform (Facebook, TikTok, Instagram, Discord, etc.) using their “report abuse” feature.<br>
+        3. Contact the <strong>National Center for Cybersecurity Incident Response (NCIRC)</strong> at <a class="table-link" href="https://www.ncirc.gov.ph/" target="_blank">ncirc.gov.ph</a> for guidance.<br>
+        4. Teach the child to block or mute the bully, avoid responding aggressively, and share experiences with a trusted adult.<br>
+        <em>Cyberbullying can impact mental health and self-esteem. Acting early, documenting incidents, and reporting to authorities are key steps.</em><br>
+        <strong>Reminder:</strong> Never let the child face online bullying alone. Emotional support from family and professionals is essential.
+      </td>
+    </tr>
+    <tr>
+      <td>School is not addressing harassment based on gender, religion, or disability.</td>
+      <td>
+        <strong>What to do:</strong><br>
+        1. Talk to the school principal or superintendent first and explain the incidents clearly.<br>
+        2. If the school does not resolve the issue, contact the DepEd regional office for guidance.<br>
+        3. For serious or ongoing harassment, contact the <strong>Commission on Human Rights (CHR) Philippines</strong> at 1343 or visit <a class="table-link" href="https://www.chr.gov.ph/" target="_blank">CHR Official Website</a>.<br>
+        <em>CHR can investigate discrimination and harassment cases and ensure schools follow laws protecting students’ rights.</em><br>
+        <strong>Tip:</strong> Keep detailed records of all incidents, communications with school officials, and any evidence. Documentation helps in filing formal complaints.
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+  </div>
+
+  <footer>© 2026 Bullying Awareness Campaign</footer>
+
+  <script>
+    function toggleMenu() {
+      document.getElementById("navMenu").classList.toggle("show");
+    }
+  </script>
+
+</body>
+</html>

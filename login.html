@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Incident Management System - Login</title>
+
+  <style>
+    body {  
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: linear-gradient(to bottom, #228B22, #228B22);
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 600px;
+      margin: 50px auto;
+      background: #fff;
+      padding: 30px 25px;
+      border-radius: 16px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      border-top: 10px solid #FFD700;
+      text-align: center;
+    }
+
+    .logo {
+      width: 100px;
+      height: 100px;
+      margin-bottom: 15px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #FFD700;
+    }
+
+    h1 { color: #FFD700; margin-bottom: 10px; font-size: 28px; }
+    .subtitle { color: #006400; font-size: 16px; margin-bottom: 25px; }
+
+    form label { display: block; margin-top: 12px; font-weight: 600; font-size: 14px; text-align: left; }
+    input {
+      width: 100%;
+      padding: 12px;
+      margin-top: 6px;
+      border: 1px solid #ebbe0b;
+      border-radius: 8px;
+      font-size: 14px;
+      box-sizing: border-box;
+      transition: all 0.2s ease;
+    }
+    input:focus { outline: none; border-color: #c7b136; box-shadow: 0 0 8px rgba(0,0,0,0.2); }
+
+    button {
+      margin-top: 25px;
+      width: 100%;
+      padding: 14px;
+      background: #FFD700;
+      color: #000;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    button:hover { background: #006400; color: #fff; }
+
+    .toggle-link { text-align: center; margin-top: 15px; }
+    .toggle-link a { color: #006400; font-weight: bold; text-decoration: none; }
+    .toggle-link a:hover { text-decoration: underline; }
+
+    /* Error message */
+    #error {
+      color: red;
+      margin-top: 12px;
+      font-weight: bold;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <img src="logo.png" alt="School Logo" class="logo">
+    <h1>Incident Reporting Portal</h1>
+    <div class="subtitle">Login to access the system</div>
+
+    <form id="loginForm">
+      <label>Email</label>
+      <input type="email" id="email" placeholder="Enter your email" required>
+      <label>Password</label>
+      <input type="password" id="password" placeholder="Enter your password" required>
+      <button type="submit">Login</button>
+      <div id="error"></div>
+    </form>
+
+    <div class="toggle-link">
+      <a href="signupform.html">Don't have an account? Sign Up</a>
+    </div>
+  </div>
+
+<script>
+  // Create default admin if no users exist
+  if (!localStorage.getItem("users")) {
+    const defaultUsers = [
+      {
+        fullName: "Erlinda Amosco",
+        email: "erlindaamosco810@gmail.com",
+        password: "1245678",
+        role: "Admin"
+      }
+    ];
+    localStorage.setItem("users", JSON.stringify(defaultUsers));
+  }
+
+  const loginForm = document.getElementById("loginForm");
+  const errorDiv = document.getElementById("error");
+
+  loginForm.addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value.trim();
+    const users = JSON.parse(localStorage.getItem("users")) || [];
+
+    const user = users.find(u => u.email === email);
+
+    if (!user) {
+      errorDiv.textContent = "Email not found. Please sign up first.";
+    } else if (user.password !== password) {
+      errorDiv.textContent = "Incorrect password. Try again.";
+    } else {
+      // Save logged in user
+      localStorage.setItem("loggedUser", JSON.stringify(user));
+      errorDiv.textContent = "";
+
+      // Redirect based on role
+      if (user.role === "Admin") {
+        window.location.href = "min.html";  // Admin dashboard
+      } else {
+        window.location.href = "Home.html"; // Teacher/Student/Parent
+      }
+    }
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bullying Awareness</title>
+
+  <style>
+    body {
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: linear-gradient(to bottom, #228B22, #006400);
+      margin: 0;
+      padding: 0;
+      color: #333;
+    }
+
+    /* ===== NAVBAR ===== */
+    header {
+      background-color: #006400;
+      border-bottom: 4px solid #FFD700;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    }
+
+    .nav-container {
+      max-width: 1200px;
+      margin: auto;
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 22px;
+      font-weight: bold;
+      color: #FFD700;
+    }
+
+    .logo img {
+      height: 50px;
+      width: 50px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #FFD700;
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 12px;
+      margin: 0;
+      padding: 0;
+    }
+
+    nav ul li a {
+      color: white;
+      text-decoration: none;
+      padding: 10px 16px;
+      font-weight: 600;
+      border-radius: 6px;
+      transition: 0.3s;
+    }
+
+    nav ul li a:hover,
+    nav ul li a.active {
+      background-color: #228B22;
+      color: #FFD700;
+    }
+
+    .menu-toggle {
+      display: none;
+      font-size: 26px;
+      color: white;
+      cursor: pointer;
+    }
+
+    @media (max-width: 768px) {
+      nav ul {
+        position: absolute;
+        top: 65px;
+        right: 0;
+        width: 100%;
+        background-color: #006400;
+        flex-direction: column;
+        text-align: center;
+        display: none;
+      }
+
+      nav ul.show {
+        display: flex;
+      }
+
+      .menu-toggle {
+        display: block;
+      }
+    }
+
+    /* ===== CONTENT ===== */
+    .container {
+      width: 95%;
+      max-width: 1000px;
+      margin: 40px auto;
+      background: #fff;
+      padding: 35px 25px;
+      border-radius: 16px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+      border-top: 10px solid #FFD700;
+    }
+
+    h1 {
+      text-align: center;
+      color: #FFD700;
+      font-size: 36px;
+      margin-bottom: 15px;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #006400;
+      font-size: 18px;
+      margin-bottom: 35px;
+    }
+
+    .image-box {
+      width: 100%;
+      margin-bottom: 35px;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+    }
+
+    .image-box img {
+      width: 100%;
+      display: block;
+    }
+
+    section {
+      margin-bottom: 30px;
+    }
+
+    h2 {
+      color: #006400;
+      text-align: center;
+      margin-bottom: 15px;
+      font-size: 24px;
+    }
+
+    p {
+      text-align: justify;
+      font-size: 16px;
+      line-height: 1.8;
+      margin-bottom: 15px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      color: #FFD700;
+      margin-top: 10px;
+    }
+
+    /* ===== Admin Report Table ===== */
+    #adminReports table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+    #adminReports table th,
+    #adminReports table td {
+      padding: 8px;
+      border: 1px solid #000;
+      text-align: left;
+    }
+    #adminReports table th {
+      background-color: #228B22;
+      color: #FFD700;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <header>
+    <div class="nav-container">
+      <div class="logo">
+        <img src="logo.png" alt="Bullying Awareness Logo"> SWDSMS
+      </div>
+      <div class="menu-toggle" onclick="toggleMenu()">☰</div>
+
+      <nav>
+        <ul id="navMenu">
+          <li><a href="Home.html" class="active">Bullying</a></li>
+          <li><a href="cyber.html">Cyberbullying</a></li>
+          <li><a href="prevention.html">Prevention</a></li>
+          <li><a href="report.html">Report</a></li>
+          <li><a href="dashboard.html">Dashboard</a></li>
+          <li><a href="get.html">Get Help Now</a></li>
+          <li><a href="login.html">Logout</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- CONTENT -->
+  <div class="container">
+    <h1>Learn, Report, and Take Action Against Bullying</h1>
+    <div class="subtitle">Your guide to creating a safe and supportive environment for students</div>
+
+    <div class="image-box">
+      <img src="1a.png" alt="Bullying Awareness">
+    </div>
+
+    <section>
+      <h2>Understanding Bullying</h2>
+      <p>
+        Bullying is a widespread issue affecting children, teens, and even adults in various environments such as schools, workplaces, and online communities. 
+        It is defined as repeated aggressive behavior intended to hurt or intimidate another person physically, emotionally, or socially. 
+        Bullying can take many forms, including physical acts like hitting or pushing, verbal abuse such as name-calling or mocking, 
+        relational bullying like exclusion or spreading rumors, and digital or cyberbullying through social media or messaging platforms. 
+        The consequences of bullying are profound. Victims often experience anxiety, depression, lower self-esteem, difficulty concentrating, 
+        and social withdrawal. Understanding the root causes, such as power imbalances, social pressures, and individual stressors, 
+        is critical to preventing and addressing bullying effectively.
+      </p>
+    </section>
+
+    <section>
+      <h2>The Role of Reporting</h2>
+      <p>
+        Reporting bullying is one of the most effective ways to combat it. Unfortunately, many victims remain silent due to fear of retaliation, 
+        embarrassment, or uncertainty about whom to approach. Bystanders may also hesitate to intervene. However, reporting incidents promptly 
+        can prevent further harm, help authorities take corrective action, and offer support to those affected. Teachers, counselors, administrators, 
+        and parents play a critical role in ensuring reports are taken seriously and acted upon appropriately. Encouraging open communication and 
+        creating a safe environment for students to report incidents is essential to fostering a culture of accountability and respect.
+      </p>
+    </section>
+
+    <section>
+      <h2>Impact on Bullies and Solutions</h2>
+      <p>
+        While victims face immediate and long-term consequences, individuals who engage in bullying behavior are also affected negatively over time. 
+        Persistent bullying can lead to difficulties in forming healthy relationships, academic or career setbacks, and legal troubles. 
+        Addressing the behavior early through counseling, behavioral interventions, and positive reinforcement strategies can redirect potential bullies 
+        toward more constructive ways of interacting. Schools and communities must provide programs that promote empathy, conflict resolution skills, 
+        and social-emotional learning to reduce bullying incidents effectively.
+      </p>
+    </section>
+
+    <section>
+      <h2>Taking Action</h2>
+      <p>
+        Combating bullying requires a collective effort. Individuals, families, schools, and communities must work together to raise awareness, 
+        implement preventive measures, and support victims. Simple acts, such as speaking up, showing empathy, and fostering inclusion, 
+        can make a significant difference. Encouraging education on bullying, clear reporting procedures, and professional counseling resources 
+        ensures a safe environment for everyone. By promoting respect, kindness, and accountability, we can create spaces where students thrive 
+        without fear of intimidation or harm.
+      </p>
+    </section>
+  </div>
+
+  <div class="container" id="adminReports" style="display: none;">
+    <h2>Submitted Reports (Admin Only)</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Student Name</th>
+          <th>Grade/Section</th>
+          <th>Incident Type</th>
+          <th>Description</th>
+          <th>Date</th>
+          <th>Time</th>
+        </tr>
+      </thead>
+      <tbody id="reportTable"></tbody>
+    </table>
+    <div style="margin-top: 20px;">
+      <strong>Total Incidents Submitted:</strong> <span id="totalIncidents">0</span>
+    </div>
+  </div>
+
+  <footer>© 2026 Bullying Awareness Campaign</footer>
+
+  <script>
+    function toggleMenu() {
+      document.getElementById("navMenu").classList.toggle("show");
+    }
+
+    // Admin Reports Logic
+    const loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
+
+    if (loggedUser && loggedUser.role === "Admin") {
+      document.getElementById("adminReports").style.display = "block";
+
+      const reportTable = document.getElementById('reportTable');
+      const totalIncidents = document.getElementById('totalIncidents');
+
+      function formatTime(time24) {
+        if (!time24) return '';
+        const [hourStr, minute] = time24.split(':');
+        let hour = parseInt(hourStr);
+        const ampm = hour >= 12 ? 'PM' : 'AM';
+        hour = hour % 12;
+        hour = hour ? hour : 12;
+        return `${hour}:${minute} ${ampm}`;
+      }
+
+      function addReportToTable(report) {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${report.name}</td>
+          <td>${report.grade}</td>
+          <td>${report.type}</td>
+          <td>${report.desc}</td>
+          <td>${report.date}</td>
+          <td>${formatTime(report.time)}</td>
+        `;
+        reportTable.appendChild(row);
+        totalIncidents.textContent = reportTable.rows.length;
+      }
+
+      const savedReports = JSON.parse(localStorage.getItem('reports')) || [];
+
+      if (savedReports.length === 0) {
+        const defaultReports = [
+          {
+            name: "Anonymous",
+            grade: "10-A",
+            type: "Bullying",
+            desc: "Sinampal ako at sinuntok",
+            date: "2026-03-01",
+            time: "16:07"
+          },
+          {
+            name: "Vham",
+            grade: "12-B",
+            type: "Cutting Class",
+            desc: "Ayaw pumasok kasi mas gusto mag-inom ng alak",
+            date: "2026-03-05",
+            time: "13:16"
+          }
+        ];
+        localStorage.setItem('reports', JSON.stringify(defaultReports));
+        defaultReports.forEach(report => addReportToTable(report));
+      } else {
+        savedReports.forEach(report => addReportToTable(report));
+      }
+    }
+  </script>
+
+</body>
+</html>
