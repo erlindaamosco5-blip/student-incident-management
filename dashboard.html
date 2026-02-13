@@ -246,99 +246,88 @@
 </div>
 
 <footer>© 2026 Bullying Awareness Campaign</footer>
+
 <script>
-  // NAVBAR TOGGLE
+  // ===== NAVBAR TOGGLE =====
   function toggleMenu() {
     document.getElementById("navMenu").classList.toggle("show");
   }
 
-  // ===== LOAD REPORTS =====
-  const reports = JSON.parse(localStorage.getItem("reports")) || [];
+  // ===== FUNCTION TO RENDER CHART =====
+  function renderIncidentChart() {
+    const reports = JSON.parse(localStorage.getItem("reports")) || [];
+    const counts = { bullying: 0, language: 0, digital: 0, cutting: 0, substance: 0, other: 0 };
 
-  // ===== INCIDENT COUNTERS =====
-  const counts = {
-    bullying: 0,
-    language: 0,
-    digital: 0,
-    cutting: 0,
-    substance: 0,
-    other: 0
-  };
+    reports.forEach(report => {
+      const type = report.type.toLowerCase();
+      if (type.includes("bullying")) counts.bullying++;
+      else if (type.includes("language")) counts.language++;
+      else if (type.includes("digital")) counts.digital++;
+      else if (type.includes("cutting")) counts.cutting++;
+      else if (type.includes("substance")) counts.substance++;
+      else counts.other++;
+    });
 
-  reports.forEach(report => {
-    const type = report.type.toLowerCase();
+    const total = reports.length || 1; // avoid divide by zero
+    const toPercent = value => Math.round((value / total) * 100);
 
-    if (type.includes("bullying")) {
-      counts.bullying++;
-    } else if (type.includes("language")) {
-      counts.language++;
-    } else if (type.includes("digital")) {
-      counts.digital++;
-    } else if (type.includes("cutting")) {
-      counts.cutting++;
-    } else if (type.includes("substance")) {
-      counts.substance++;
-    } else {
-      counts.other++;
-    }
-  });
+    const ctx = document.getElementById("incidentChart");
 
-  const total = reports.length || 1; // avoid divide by zero
+    // Destroy previous chart if exists to update dynamically
+    if (window.incidentChartInstance) window.incidentChartInstance.destroy();
 
-  // Convert to percentage
-  const toPercent = value => Math.round((value / total) * 100);
-
-  // ===== CHART =====
-  const ctx = document.getElementById("incidentChart");
-
-  new Chart(ctx, {
-    type: "bar",
-    data: {
-      labels: [
-        "Bullying Incident",
-        "Language Incident",
-        "Digital Misuse",
-        "Cutting Class",
-        "Substance Abuse",
-        "Other Incidents"
-      ],
-      datasets: [{
-        data: [
-          toPercent(counts.bullying),
-          toPercent(counts.language),
-          toPercent(counts.digital),
-          toPercent(counts.cutting),
-          toPercent(counts.substance),
-          toPercent(counts.other)
+    window.incidentChartInstance = new Chart(ctx, {
+      type: "bar",
+      data: {
+        labels: [
+          "Bullying Incident",
+          "Language Incident",
+          "Digital Misuse",
+          "Cutting Class",
+          "Substance Abuse",
+          "Other Incidents"
         ],
-        backgroundColor: [
-          "#e74c3c",
-          "#f1c40f",
-          "#3498db",
-          "#9b59b6",
-          "#e67e22",
-          "#2ecc71"
-        ],
-        borderRadius: 8
-      }]
-    },
-    options: {
-      responsive: true,
-      plugins: {
-        legend: { display: false }
+        datasets: [{
+          data: [
+            toPercent(counts.bullying),
+            toPercent(counts.language),
+            toPercent(counts.digital),
+            toPercent(counts.cutting),
+            toPercent(counts.substance),
+            toPercent(counts.other)
+          ],
+          backgroundColor: [
+            "#e74c3c",
+            "#f1c40f",
+            "#3498db",
+            "#9b59b6",
+            "#e67e22",
+            "#2ecc71"
+          ],
+          borderRadius: 8
+        }]
       },
-      scales: {
-        y: {
-          beginAtZero: true,
-          max: 100,
-          title: {
-            display: true,
-            text: "Percentage (%)"
-          }
+      options: {
+        responsive: true,
+        plugins: { legend: { display: false } },
+        scales: {
+          y: { beginAtZero: true, max: 100, title: { display: true, text: "Percentage (%)" } }
         }
       }
-    }
-  });
+    });
+  }
+
+  // ===== INITIAL CHART LOAD =====
+  renderIncidentChart();
+
+  // ===== AUTOMATIC CHART UPDATE AFTER REPORT SUBMIT =====
+  // Listen for storage changes (for multi-tab updates)
+  window.addEventListener("storage", () => renderIncidentChart());
+
+  // Optional: if your report submission page calls this script:
+  // After adding new report to localStorage:
+  // localStorage.setItem("reports", JSON.stringify(updatedReports));
+  // renderIncidentChart(); // <- call this to refresh chart
 </script>
 
 </body>

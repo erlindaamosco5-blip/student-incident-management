@@ -1,3 +1,6 @@
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -162,18 +165,17 @@ form button:hover {
 table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 15px;
+  margin-top: 10px;
 }
-
-table th, table td {
-  padding: 10px;
-  text-align: left;
-}
-
-table th {
+table { width: 100%; 
+  border-collapse:
+   collapse; margin-top: 10px;
+ }
+ table th, table td { padding: 10px;
+ } 
+ table th { 
   background-color: #228B22;
-  color: #FFD700;
-}
+   color: #FFD700; }
 
 h3#reportsToggle {
   cursor: pointer;
@@ -268,30 +270,28 @@ footer {
   </div>
 </div>
 
+
 <footer>© 2026 Bullying Awareness Campaign</footer>
 
 <script>
-function toggleMenu() {
-  document.getElementById("navMenu").classList.toggle("show");
+// ===== LOGGED USER & ADMIN CHECK =====
+const loggedUser = JSON.parse(localStorage.getItem("loggedUser")) || null;
+
+// Prevent blocked users from accessing dashboard
+if(loggedUser && loggedUser.blocked){
+  alert("Your account is blocked. Contact admin.");
+  window.location.href = "login.html";
 }
 
-const form = document.getElementById("incidentForm");
-const studentName = document.getElementById("studentName");
-const grade = document.getElementById("grade");
-const incidentType = document.getElementById("incidentType");
-const description = document.getElementById("description");
-const date = document.getElementById("date");
-const time = document.getElementById("time");
-const reportTable = document.getElementById("reportTable");
-const totalIncidents = document.getElementById("totalIncidents");
-const adminReports = document.getElementById("adminReports");
-const formContainer = document.getElementById("formContainer");
-const successMessage = document.getElementById("successMessage");
+// Pending users check
+if(loggedUser && loggedUser.pending){
+  alert("Your account is pending verification. Contact admin.");
+  window.location.href = "login.html";
+}
 
-const loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
-const isAdmin = loggedUser && loggedUser.email === "erlindaamosco810@gmail.com" && loggedUser.password === "1245678";
-const isVerified = loggedUser && loggedUser.verified;
+const isAdmin = loggedUser && loggedUser.email === "erlindaamosco810@gmail.com";
 
+// ===== FORMAT TIME =====
 function formatTime(t){
   if(!t) return "-";
   const [h,m] = t.split(":");
@@ -301,118 +301,122 @@ function formatTime(t){
   return `${hour}:${m} ${ampm}`;
 }
 
-// Show Reports for Admin/Verified
-if(isAdmin || isVerified){
-  adminReports.style.display = "block";
-  formContainer.style.display = "block";
+// ===== RENDER REPORTS =====
+const reportTable = document.getElementById("reportTable");
+const totalIncidents = document.getElementById("totalIncidents");
+const adminReports = document.getElementById("adminReports");
+
+function renderReports(){
   const reports = JSON.parse(localStorage.getItem("reports")) || [];
-  reports.forEach(addRow);
+  reportTable.innerHTML = "";
+  reports.forEach(r=>{
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td>${r.name}</td>
+      <td>${r.reporter}</td>
+      <td>${r.grade}</td>
+      <td>${r.type}</td>
+      <td>${r.desc}</td>
+      <td>${r.date}</td>
+      <td>${formatTime(r.time)}</td>
+    `;
+    reportTable.appendChild(row);
+  });
+  totalIncidents.textContent = reports.length;
 }
 
-// Pending User Verification
 if(isAdmin){
-  const users = JSON.parse(localStorage.getItem("users")) || [];
-  const verifyContainer = document.createElement("div");
-  verifyContainer.className = "container";
-  verifyContainer.innerHTML = `
-    <h3>Pending Users Verification</h3>
-    <table>
-      <thead>
-        <tr>
-          <th>Full Name</th>
-          <th>Email</th>
-          <th>Role</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody id="verifyTable"></tbody>
-    </table>
-  `;
-  document.body.insertBefore(verifyContainer, document.querySelector("footer"));
-  const verifyTable = document.getElementById("verifyTable");
-
-  function loadPendingUsers(){
-    verifyTable.innerHTML = "";
-    users.forEach((user,index)=>{
-      if((user.role==="Teacher" || user.role==="Parent") && !user.verified){
-        const row = document.createElement("tr");
-        row.innerHTML = `
-          <td>${user.fullName}</td>
-          <td>${user.email}</td>
-          <td>${user.role}</td>
-          <td><button onclick="verifyUser(${index})">Verify</button></td>
-        `;
-        verifyTable.appendChild(row);
-      }
-    });
-  }
-  window.verifyUser = function(index){
-    users[index].verified = true;
-    localStorage.setItem("users", JSON.stringify(users));
-    loadPendingUsers();
-    alert(users[index].fullName + " has been verified!");
-  }
-  loadPendingUsers();
+  adminReports.style.display = "block";
+  renderReports();
 }
 
-// Submit Incident Report
+// ===== SUBMIT REPORT =====
+const form = document.getElementById("incidentForm");
+const successMessage = document.getElementById("successMessage");
+
 form.addEventListener("submit", e=>{
   e.preventDefault();
   const report = {
-    name: studentName.value || "Anonymous",
-    grade: grade.value || "-",
-    type: incidentType.value,
-    desc: description.value,
-    date: date.value,
-    time: time.value
+    name: document.getElementById("studentName").value || "Anonymous",
+    reporter: loggedUser ? loggedUser.email : "Anonymous",
+    grade: document.getElementById("grade").value || "-",
+    type: document.getElementById("incidentType").value,
+    desc: document.getElementById("description").value,
+    date: document.getElementById("date").value,
+    time: document.getElementById("time").value
   };
   const reports = JSON.parse(localStorage.getItem("reports")) || [];
   reports.push(report);
   localStorage.setItem("reports", JSON.stringify(reports));
-  if(isAdmin || isVerified) addRow(report);
+  renderReports();
   successMessage.style.display = "block";
   setTimeout(()=> successMessage.style.display="none",3000);
   form.reset();
 });
 
-function addRow(r){
-  const row = document.createElement("tr");
-  row.innerHTML=`
-    <td>${r.name}</td>
-    <td>${r.grade}</td>
-    <td>${r.type}</td>
-    <td>${r.desc}</td>
-    <td>${r.date}</td>
-    <td>${formatTime(r.time)}</td>
-  `;
-  reportTable.appendChild(row);
-  totalIncidents.textContent = reportTable.rows.length;
-}
-
+// ===== TOGGLE REPORTS =====
 function toggleReports(){
   const content = document.getElementById("reportsContent");
-  const toggle = document.getElementById("reportsToggle");
-  if(content.style.display === "none"){
-    content.style.display = "block";
-    toggle.textContent = "📋 Hide Submitted Reports"; 
-  } else {
-    content.style.display = "none";
-    toggle.textContent = "📋 View Submitted Reports";
-  }
+  content.style.display = content.style.display === "none" ? "block" : "none";
 }
 
-// Search inside Reports
-const searchInput = document.getElementById("searchInput");
-if(searchInput){
-  searchInput.addEventListener("keyup",()=>{
-    const filter = searchInput.value.toLowerCase();
-    const rows = reportTable.getElementsByTagName("tr");
-    for(let row of rows){
-      const nameCell = row.cells[0].textContent.toLowerCase();
-      row.style.display = nameCell.includes(filter) ? "" : "none";
-    }
-  });
+// ===== ADMIN USER PANEL =====
+if(isAdmin){
+  const users = JSON.parse(localStorage.getItem("users")) || [];
+
+  const userContainer = document.createElement("div");
+  userContainer.className = "container";
+  userContainer.innerHTML = `
+    <h3>System Users</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Full Name</th>
+          <th>Gmail</th>
+          <th>Password</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="usersTable"></tbody>
+    </table>
+  `;
+  document.body.insertBefore(userContainer, document.querySelector("footer"));
+  const usersTable = document.getElementById("usersTable");
+
+  function renderUsers(){
+    usersTable.innerHTML = "";
+    users.forEach((user,index)=>{
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td>${user.fullName}</td>
+        <td>${user.email}</td>
+        <td>${user.password}</td>
+        <td>${user.blocked ? "🚫 Blocked" : user.pending ? "⏳ Pending" : "✅ Active"}</td>
+        <td>
+          <button onclick="toggleBlock(${index})">
+            ${user.blocked ? "Unblock" : "Block"}
+          </button>
+        </td>
+      `;
+      usersTable.appendChild(row);
+    });
+  }
+
+  window.toggleBlock = function(index){
+    users[index].blocked = !users[index].blocked;
+    localStorage.setItem("users", JSON.stringify(users));
+    renderUsers();
+  }
+
+  renderUsers();
 }
 </script>
 </body>
 </html>
+
+
+
+
+
+
