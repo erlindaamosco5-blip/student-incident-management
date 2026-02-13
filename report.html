@@ -296,19 +296,22 @@ footer {
 // ===== LOGIN CHECK =====
 const loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
 if(!loggedUser){
-  alert("You must log in first.");
+  alert("You must log in first to submit a report.");
   window.location.href = "login.html";
 }
 
 // ===== ADMIN CHECK =====
 let isAdmin = loggedUser && (loggedUser.email === "erlindaamosco810@gmail.com" || loggedUser.verifiedAdmin);
 
-// ===== SHOW FORM FOR NON-ADMIN =====
+// ===== SHOW FORM FOR NON-ADMIN USERS =====
 const formContainer = document.getElementById("formContainer");
 const verifyAdminContainer = document.getElementById("verifyAdminContainer");
 if(!isAdmin){
   formContainer.style.display = "block";
   verifyAdminContainer.style.display = loggedUser.role === "teacher" || loggedUser.role === "parent" ? "block" : "none";
+} else {
+  formContainer.style.display = "none";
+  verifyAdminContainer.style.display = "none";
 }
 
 // ===== VERIFY ADMIN BUTTON =====
@@ -336,7 +339,6 @@ function formatTime(t){
 const reportTable = document.getElementById("reportTable");
 const totalIncidents = document.getElementById("totalIncidents");
 const adminReports = document.getElementById("adminReports");
-
 function renderReports(){
   const reports = JSON.parse(localStorage.getItem("reports")) || [];
   reportTable.innerHTML = "";
@@ -402,7 +404,6 @@ if(isAdmin){
 // ===== SUBMIT REPORT =====
 const form = document.getElementById("incidentForm");
 const successMessage = document.getElementById("successMessage");
-
 if(form){ 
   form.addEventListener("submit", e=>{
     e.preventDefault();
@@ -415,11 +416,9 @@ if(form){
       time: document.getElementById("time").value,
       reporter: loggedUser.email
     };
-
     const reports = JSON.parse(localStorage.getItem("reports")) || [];
     reports.push(report);
     localStorage.setItem("reports", JSON.stringify(reports));
-
     successMessage.style.display = "block";
     setTimeout(()=> successMessage.style.display="none",3000);
     form.reset();
@@ -434,7 +433,7 @@ function toggleReports(){
 
 // ===== LOGOUT FUNCTION =====
 function logout() {
-  localStorage.removeItem("loggedUser"); // keep reports & users
+  localStorage.removeItem("loggedUser");
   alert("You have been logged out.");
   window.location.href = "login.html";
 }
