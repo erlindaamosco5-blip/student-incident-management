@@ -296,9 +296,19 @@ footer {
 // ===== LOGIN CHECK =====
 const loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
 if(!loggedUser){
-  alert("You must log in first to submit a report.");
+  // Auto redirect if not logged in
   window.location.href = "login.html";
 }
+
+// ===== PREVENT ACCESS TO REPORT PAGE FROM NAVBAR IF NOT LOGGED IN =====
+document.querySelectorAll('a[href="report.html"]').forEach(link => {
+  link.addEventListener("click", function(e){
+    if(!loggedUser){
+      e.preventDefault();
+      window.location.href = "login.html";
+    }
+  });
+});
 
 // ===== ADMIN CHECK =====
 let isAdmin = loggedUser && (loggedUser.email === "erlindaamosco810@gmail.com" || loggedUser.verifiedAdmin);
@@ -317,7 +327,7 @@ if(!isAdmin){
 // ===== VERIFY ADMIN BUTTON =====
 const verifyBtn = document.getElementById("verifyAdminBtn");
 if(verifyBtn){
-  verifyBtn.addEventListener("click", ()=>{
+  verifyBtn.addEventListener("click", ()=> {
     loggedUser.verifiedAdmin = true;
     localStorage.setItem("loggedUser", JSON.stringify(loggedUser));
     document.getElementById("verifyMessage").style.display = "block";
@@ -434,7 +444,6 @@ function toggleReports(){
 // ===== LOGOUT FUNCTION =====
 function logout() {
   localStorage.removeItem("loggedUser");
-  alert("You have been logged out.");
   window.location.href = "login.html";
 }
 
