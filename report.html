@@ -1,6 +1,3 @@
-
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,12 +6,12 @@
 <title>Dashboard | SWDSMS</title>
 <style>
 /* ===== BODY ===== */
-body {
+body {  
   font-family: "Segoe UI", Arial, sans-serif;
-  background: linear-gradient(to bottom, #228B22, #006400);
+  background: linear-gradient(to bottom,  #006400);
   margin: 0;
   padding: 0;
-  color: #333;
+  color:black;
 }
 a { text-decoration: none; }
 
@@ -167,15 +164,14 @@ table {
   border-collapse: collapse;
   margin-top: 10px;
 }
-table { width: 100%; 
-  border-collapse:
-   collapse; margin-top: 10px;
- }
- table th, table td { padding: 10px;
- } 
- table th { 
+table th, table td {
+  padding: 10px;
+  border: 1px solid #000;
+} 
+table th { 
   background-color: #228B22;
-   color: #FFD700; }
+  color: #FFD700;
+}
 
 h3#reportsToggle {
   cursor: pointer;
@@ -198,26 +194,25 @@ footer {
 <header>
   <div class="nav-container">
     <div class="logo">
-      <img src="logo.png" alt="School Logo">
-      SWDSMS
+      <img src="logo.png" alt="School Logo"> SWDSMS
     </div>
     <div class="menu-toggle" onclick="toggleMenu()">☰</div>
     <nav>
       <ul id="navMenu">
         <li><a href="Home.html">Bullying</a></li>
         <li><a href="cyber.html">Cyberbullying</a></li>
-        <li><a href="prevention.html" class=>Prevention</a></li>
+        <li><a href="prevention.html">Prevention</a></li>
         <li><a href="report.html">Report</a></li>
         <li><a href="dashboard.html">Dashboard</a></li>
         <li><a href="get.html">Get Help Now</a></li>
-        <li><a href="login.html">Logout</a></li>
+        <li><a href="#" onclick="logout()">Logout</a></li>
       </ul>
     </nav>
   </div>
 </header>
 
-<!-- INCIDENT REPORT FORM -->
-<div class="container" id="formContainer">
+<!-- INCIDENT REPORT FORM (Hidden for Admins) -->
+<div class="container" id="formContainer" style="display:none;">
   <h1>Anonymous Incident Reporting</h1>
   <p class="subtitle">Submit a report safely and anonymously.</p>
 
@@ -230,8 +225,7 @@ footer {
       <option>Digital Misuse</option>
       <option>Cutting Class</option>
       <option>Substance Abuse</option>
-            <option>Other Incidents</option>
-
+      <option>Other Incidents</option>
     </select>
     <textarea id="description" rows="4" placeholder="Describe the incident"></textarea>
     <input type="date" id="date">
@@ -242,6 +236,14 @@ footer {
   <div id="successMessage" style="display:none; text-align:center; color:green; font-weight:bold;">
     Report successfully submitted!
   </div>
+</div>
+
+<!-- ADMIN VERIFICATION BUTTON FOR TEACHER/PARENT -->
+<div class="container" id="verifyAdminContainer" style="display:none; text-align:center;">
+  <h3>Become Verified Admin</h3>
+  <p class="subtitle">If you are a teacher or parent, click below to verify as admin.</p>
+  <button id="verifyAdminBtn" style="background-color:#FFD700; padding:12px 20px; border:none; border-radius:12px; font-weight:bold; cursor:pointer;">Verify as Admin</button>
+  <div id="verifyMessage" style="margin-top:10px; font-weight:bold; color:green; display:none;">You are now a verified admin!</div>
 </div>
 
 <!-- REPORTS FOR ADMIN -->
@@ -259,6 +261,7 @@ footer {
           <th>Description</th>
           <th>Date</th>
           <th>Time</th>
+          <th>Reporter</th>
         </tr>
       </thead>
       <tbody id="reportTable"></tbody>
@@ -270,26 +273,54 @@ footer {
   </div>
 </div>
 
+<!-- SYSTEM USERS FOR ADMIN -->
+<div class="container" id="userContainer" style="display:none;">
+  <h3>System Users</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Full Name</th>
+        <th>Gmail</th>
+        <th>Password</th>
+        <th>Role</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody id="usersTable"></tbody>
+  </table>
+</div>
 
 <footer>© 2026 Bullying Awareness Campaign</footer>
 
 <script>
-// ===== LOGGED USER & ADMIN CHECK =====
-const loggedUser = JSON.parse(localStorage.getItem("loggedUser")) || null;
-
-// Prevent blocked users from accessing dashboard
-if(loggedUser && loggedUser.blocked){
-  alert("Your account is blocked. Contact admin.");
+// ===== LOGIN CHECK =====
+const loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
+if(!loggedUser){
+  alert("You must log in first.");
   window.location.href = "login.html";
 }
 
-// Pending users check
-if(loggedUser && loggedUser.pending){
-  alert("Your account is pending verification. Contact admin.");
-  window.location.href = "login.html";
+// ===== ADMIN CHECK =====
+let isAdmin = loggedUser && (loggedUser.email === "erlindaamosco810@gmail.com" || loggedUser.verifiedAdmin);
+
+// ===== SHOW FORM FOR NON-ADMIN =====
+const formContainer = document.getElementById("formContainer");
+const verifyAdminContainer = document.getElementById("verifyAdminContainer");
+if(!isAdmin){
+  formContainer.style.display = "block";
+  verifyAdminContainer.style.display = loggedUser.role === "teacher" || loggedUser.role === "parent" ? "block" : "none";
 }
 
-const isAdmin = loggedUser && loggedUser.email === "erlindaamosco810@gmail.com";
+// ===== VERIFY ADMIN BUTTON =====
+const verifyBtn = document.getElementById("verifyAdminBtn");
+if(verifyBtn){
+  verifyBtn.addEventListener("click", ()=>{
+    loggedUser.verifiedAdmin = true;
+    localStorage.setItem("loggedUser", JSON.stringify(loggedUser));
+    document.getElementById("verifyMessage").style.display = "block";
+    setTimeout(()=>{ location.reload(); }, 1000);
+  });
+}
 
 // ===== FORMAT TIME =====
 function formatTime(t){
@@ -313,76 +344,26 @@ function renderReports(){
     const row = document.createElement("tr");
     row.innerHTML = `
       <td>${r.name}</td>
-      <td>${r.reporter}</td>
       <td>${r.grade}</td>
       <td>${r.type}</td>
       <td>${r.desc}</td>
       <td>${r.date}</td>
       <td>${formatTime(r.time)}</td>
+      <td>${r.reporter}</td>
     `;
     reportTable.appendChild(row);
   });
   totalIncidents.textContent = reports.length;
 }
 
+// ===== ADMIN SECTION =====
 if(isAdmin){
   adminReports.style.display = "block";
+  document.getElementById("userContainer").style.display = "block";
   renderReports();
-}
 
-// ===== SUBMIT REPORT =====
-const form = document.getElementById("incidentForm");
-const successMessage = document.getElementById("successMessage");
-
-form.addEventListener("submit", e=>{
-  e.preventDefault();
-  const report = {
-    name: document.getElementById("studentName").value || "Anonymous",
-    reporter: loggedUser ? loggedUser.email : "Anonymous",
-    grade: document.getElementById("grade").value || "-",
-    type: document.getElementById("incidentType").value,
-    desc: document.getElementById("description").value,
-    date: document.getElementById("date").value,
-    time: document.getElementById("time").value
-  };
-  const reports = JSON.parse(localStorage.getItem("reports")) || [];
-  reports.push(report);
-  localStorage.setItem("reports", JSON.stringify(reports));
-  renderReports();
-  successMessage.style.display = "block";
-  setTimeout(()=> successMessage.style.display="none",3000);
-  form.reset();
-});
-
-// ===== TOGGLE REPORTS =====
-function toggleReports(){
-  const content = document.getElementById("reportsContent");
-  content.style.display = content.style.display === "none" ? "block" : "none";
-}
-
-// ===== ADMIN USER PANEL =====
-if(isAdmin){
-  const users = JSON.parse(localStorage.getItem("users")) || [];
-
-  const userContainer = document.createElement("div");
-  userContainer.className = "container";
-  userContainer.innerHTML = `
-    <h3>System Users</h3>
-    <table>
-      <thead>
-        <tr>
-          <th>Full Name</th>
-          <th>Gmail</th>
-          <th>Password</th>
-          <th>Status</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody id="usersTable"></tbody>
-    </table>
-  `;
-  document.body.insertBefore(userContainer, document.querySelector("footer"));
   const usersTable = document.getElementById("usersTable");
+  const users = JSON.parse(localStorage.getItem("users")) || [];
 
   function renderUsers(){
     usersTable.innerHTML = "";
@@ -392,12 +373,8 @@ if(isAdmin){
         <td>${user.fullName}</td>
         <td>${user.email}</td>
         <td>${user.password}</td>
-        <td>${user.blocked ? "🚫 Blocked" : user.pending ? "⏳ Pending" : "✅ Active"}</td>
-        <td>
-          <button onclick="toggleBlock(${index})">
-            ${user.blocked ? "Unblock" : "Block"}
-          </button>
-        </td>
+        <td>${user.role}</td>
+        <td><button onclick="toggleBlock(${index})">${user.blocked ? "Unblock" : "Block"}</button></td>
       `;
       usersTable.appendChild(row);
     });
@@ -410,13 +387,62 @@ if(isAdmin){
   }
 
   renderUsers();
+
+  const searchInput = document.getElementById("searchInput");
+  searchInput.addEventListener("input", function() {
+    const filter = this.value.toLowerCase();
+    const rows = reportTable.getElementsByTagName("tr");
+    Array.from(rows).forEach(row => {
+      const studentName = row.cells[0].textContent.toLowerCase();
+      row.style.display = studentName.includes(filter) ? "" : "none";
+    });
+  });
+}
+
+// ===== SUBMIT REPORT =====
+const form = document.getElementById("incidentForm");
+const successMessage = document.getElementById("successMessage");
+
+if(form){ 
+  form.addEventListener("submit", e=>{
+    e.preventDefault();
+    const report = {
+      name: document.getElementById("studentName").value || "Anonymous",
+      grade: document.getElementById("grade").value || "-",
+      type: document.getElementById("incidentType").value,
+      desc: document.getElementById("description").value,
+      date: document.getElementById("date").value,
+      time: document.getElementById("time").value,
+      reporter: loggedUser.email
+    };
+
+    const reports = JSON.parse(localStorage.getItem("reports")) || [];
+    reports.push(report);
+    localStorage.setItem("reports", JSON.stringify(reports));
+
+    successMessage.style.display = "block";
+    setTimeout(()=> successMessage.style.display="none",3000);
+    form.reset();
+  });
+}
+
+// ===== TOGGLE REPORTS =====
+function toggleReports(){
+  const content = document.getElementById("reportsContent");
+  content.style.display = content.style.display === "none" ? "block" : "none";
+}
+
+// ===== LOGOUT FUNCTION =====
+function logout() {
+  localStorage.removeItem("loggedUser"); // keep reports & users
+  alert("You have been logged out.");
+  window.location.href = "login.html";
+}
+
+// ===== MOBILE MENU =====
+function toggleMenu(){
+  document.getElementById("navMenu").classList.toggle("show");
 }
 </script>
 </body>
 </html>
-
-
-
-
-
-
