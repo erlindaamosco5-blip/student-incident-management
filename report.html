@@ -211,11 +211,10 @@ footer {
   </div>
 </header>
 
-<!-- INCIDENT REPORT FORM (Hidden for Admins) -->
+<!-- INCIDENT REPORT FORM -->
 <div class="container" id="formContainer" style="display:none;">
   <h1>Anonymous Incident Reporting</h1>
   <p class="subtitle">Submit a report safely and anonymously.</p>
-
   <form id="incidentForm">
     <input type="text" id="studentName" placeholder="Student Name (Optional)">
     <input type="text" id="grade" placeholder="Grade / Section">
@@ -232,13 +231,12 @@ footer {
     <input type="time" id="time">
     <button type="submit">Submit Report</button>
   </form>
-
   <div id="successMessage" style="display:none; text-align:center; color:green; font-weight:bold;">
     Report successfully submitted!
   </div>
 </div>
 
-<!-- ADMIN VERIFICATION BUTTON FOR TEACHER/PARENT -->
+<!-- ADMIN VERIFICATION BUTTON -->
 <div class="container" id="verifyAdminContainer" style="display:none; text-align:center;">
   <h3>Become Verified Admin</h3>
   <p class="subtitle">If you are a teacher or parent, click below to verify as admin.</p>
@@ -294,26 +292,24 @@ footer {
 
 <script>
 // ===== LOGIN CHECK =====
-const loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
+let loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
 if(!loggedUser){
-  // Auto redirect if not logged in
   window.location.href = "login.html";
 }
 
-// ===== PREVENT ACCESS TO REPORT PAGE FROM NAVBAR IF NOT LOGGED IN =====
-document.querySelectorAll('a[href="report.html"]').forEach(link => {
-  link.addEventListener("click", function(e){
-    if(!loggedUser){
-      e.preventDefault();
-      window.location.href = "login.html";
-    }
-  });
-});
+// ===== BLOCK CHECK =====
+let allUsers = JSON.parse(localStorage.getItem("users")) || [];
+let currentUser = allUsers.find(u => u.email === loggedUser.email);
+if(currentUser && currentUser.blocked){
+  alert("You have been blocked by admin. Access denied.");
+  localStorage.removeItem("loggedUser");
+  window.location.href = "login.html";
+}
 
 // ===== ADMIN CHECK =====
 let isAdmin = loggedUser && (loggedUser.email === "erlindaamosco810@gmail.com" || loggedUser.verifiedAdmin);
 
-// ===== SHOW FORM FOR NON-ADMIN USERS =====
+// ===== SHOW FORM FOR NON-ADMIN =====
 const formContainer = document.getElementById("formContainer");
 const verifyAdminContainer = document.getElementById("verifyAdminContainer");
 if(!isAdmin){
@@ -374,12 +370,10 @@ if(isAdmin){
   document.getElementById("userContainer").style.display = "block";
   renderReports();
 
-  const usersTable = document.getElementById("usersTable");
-  const users = JSON.parse(localStorage.getItem("users")) || [];
-
   function renderUsers(){
+    const usersTable = document.getElementById("usersTable");
     usersTable.innerHTML = "";
-    users.forEach((user,index)=>{
+    allUsers.forEach((user,index)=>{
       const row = document.createElement("tr");
       row.innerHTML = `
         <td>${user.fullName}</td>
@@ -393,8 +387,8 @@ if(isAdmin){
   }
 
   window.toggleBlock = function(index){
-    users[index].blocked = !users[index].blocked;
-    localStorage.setItem("users", JSON.stringify(users));
+    allUsers[index].blocked = !allUsers[index].blocked;
+    localStorage.setItem("users", JSON.stringify(allUsers));
     renderUsers();
   }
 
@@ -417,6 +411,13 @@ const successMessage = document.getElementById("successMessage");
 if(form){ 
   form.addEventListener("submit", e=>{
     e.preventDefault();
+
+    // Prevent blocked users from submitting
+    if(currentUser && currentUser.blocked){
+      alert("You are blocked. Cannot submit reports.");
+      return;
+    }
+
     const report = {
       name: document.getElementById("studentName").value || "Anonymous",
       grade: document.getElementById("grade").value || "-",
